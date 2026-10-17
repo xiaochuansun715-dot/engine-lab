@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "sampleRate": 48000,
+  "method": "Own pitch-synchronous overlapping grains from credited R8 recording; not original app DSP",
+  "banks": [
+    {
+      "name": "idle",
+      "file": "idle.wav",
+      "sourceHz": 80.2675585284281,
+      "sourceSeconds": 20,
+      "grains": [
+        {
+          "offset": 0,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 1196,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 2392,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 3588,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 4784,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 5980,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 7176,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 8372,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 9568,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 10764,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 11960,
+          "length": 1196,
+          "center": 598
+        },
+        {
+          "offset": 13156,
+          "length": 1196,
+          "center": 598
+        }
+      ],
+      "sha256": "8efadd1ba821cf727df67d72897be5c514bbf0b53c4ca3829865baa5deea14e6"
+    },
+    {
+      "name": "mid",
+      "file": "mid.wav",
+      "sourceHz": 115.38461538461539,
+      "sourceSeconds": 36,
+      "grains": [
+        {
+          "offset": 0,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 832,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 1664,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 2496,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 3328,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 4160,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 4992,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 5824,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 6656,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 7488,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 8320,
+          "length": 832,
+          "center": 416
+        },
+        {
+          "offset": 9152,
+          "length": 832,
+          "center": 416
+        }
+      ],
+      "sha256": "de335cb356097491630cfdeb8705d8599cc1be1582f84538e84a7f16dd645935"
+    },
+    {
+      "name": "high",
+      "file": "high.wav",
+      "sourceHz": 168.42105263157896,
+      "sourceSeconds": 52,
+      "grains": [
+        {
+          "offset": 0,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 570,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 1140,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 1710,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 2280,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 2850,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 3420,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 3990,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 4560,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 5130,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 5700,
+          "length": 570,
+          "center": 285
+        },
+        {
+          "offset": 6270,
+          "length": 570,
+          "center": 285
+        }
+      ],
+      "sha256": "de7cb28e472434c628797dac13741654a1e503831ce2cc28712f3ff8c0299418"
+    }
+  ],
+  "overrun": {
+    "file": "overrun.wav",
+    "sampleRate": 48000,
+    "sha256": "0540e39ff964a8e160ca8cf60aca15d96b96e3fc8dd07e203d7e232137eeb752",
+    "sourceStartSeconds": 3.14275,
+    "duration": 0.38
+  }
+}
