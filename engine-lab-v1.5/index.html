@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101718"><title>引擎工坊 · Engine Lab</title>
+  <link rel="icon" href="icon.svg"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="cockpit.css"><link rel="stylesheet" href="recording.css"><link rel="stylesheet" href="dashboard.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/"}}</script>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="引擎工坊首页"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 6h16M13 6v5M19 6v5M6 14h18l4 5v7H8V14H4v8h4M12 12h9M22 20h6"/></svg><span>引擎工坊<small>ENGINE LAB / 1.5</small></span></a>
+    <nav class="mode-switch" aria-label="体验模式"><button class="active" data-mode="bench">引擎实验室</button><button data-mode="drive">试车场 <span>400 m</span></button></nav>
+    <div class="header-actions"><span class="local-badge"><i></i> 本地离线</span><button id="helpButton" class="icon-button" aria-label="操作说明">?</button><button id="soundButton" class="icon-button sound-button" aria-label="开启声音" title="开启声音">♫ <span>声音关</span></button></div>
+  </header>
+  <main>
+    <aside class="left-rail">
+      <div class="eyebrow">YOUR ENGINE</div><h1>每一次点火，<br><em>都由你掌控。</em></h1>
+      <p class="intro">原机参数 · 完整仪表<br>从点火、温度到传动，每一项都看得见。</p>
+      <button id="referenceButton" class="reference-button">载入录屏里的 Hellcat <span>↗</span></button>
+      <div class="section-label">动力单元 <span>05</span></div>
+      <div id="presetList" class="preset-list"></div>
+      <section class="phone-library" aria-label="手机参数库"><div class="section-label">手机参数库 <span id="phoneCount">170</span></div><input id="phoneSearch" type="search" placeholder="搜索车型或发动机" aria-label="搜索手机发动机"><select id="phoneEngine" aria-label="选择手机发动机"></select><div class="snapshot-buttons"><button id="phoneCurrent">最新原机 · V8</button><button id="phoneSnapshot0">文件 1 · AMG V8</button><button id="phoneSnapshot1">文件 2 · Hellcat</button></div><p id="phoneSummary"></p><button id="phoneRawButton" class="text-button">查看来源参数 ↗</button></section>
+      <section class="spec-box"><div><span>排量</span><strong id="specLitres">2.0 <small>L</small></strong></div><div><span>峰值功率 / 预测</span><strong id="specPower">— <small>kW</small></strong></div><p id="engineCaption"></p></section>
+      <div class="rail-footer"><span class="small-rule"></span><p>IPA 1.0.7 音源 · 长按启动<br>逐缸点火 · 400 米加速</p></div>
+    </aside>
+    <section class="main-column">
+      <div class="stage" id="stage">
+        <div id="viewport" aria-label="可拖动旋转的三维发动机展示"></div>
+        <div class="stage-top"><div><span class="live-dot" id="liveDot"></span><span id="engineStatus">等待点火</span><span class="stage-divider">/</span><span id="stageLabel">ENGINE CUTAWAY</span></div><span class="view-code" id="viewCode">I4 · 2.0T</span></div>
+        <div class="stage-caption" id="stageCaption"><span>01 / MECHANICAL VIEW</span><h2>看见引擎<br>运转的每个瞬间。</h2></div>
+        <div class="stage-tools"><button id="cutawayButton" class="chip active">半剖</button><button id="slowButton" class="chip">慢动作</button><button id="cameraButton" class="chip">复位视角</button></div>
+        <div class="race-overlay hidden" id="raceOverlay"><span id="raceLabel">400 米加速挑战</span><strong id="raceCountdown">READY</strong><p id="raceHint">按住 W 或点击下方油门</p></div>
+        <div class="race-data hidden" id="raceData"><div>用时 <b id="raceTime">0.00</b><small>s</small></div><div>距离 <b id="raceDistance">0</b><small>/ 400 m</small></div><div>0–100 <b id="zero100">—</b><small>s</small></div></div>
+        <div class="stage-bottom"><span id="viewHint">鼠标拖动旋转 · 滚轮缩放</span><button id="raceButton" class="hidden race-start">400 米起跑 ↗</button><span id="fpsLabel">3D / REALTIME</span></div>
+        <div id="loading" class="loading">正在组装引擎 <span>· · ·</span></div>
+      </div>
+      <section class="telemetry">
+        <div class="rpm-block"><div class="metric-label">ENGINE SPEED <span>r/min</span></div><div class="rpm-number"><strong id="rpmValue">0</strong><span id="gearValue">N</span></div><div class="rpm-bar" id="rpmBar"></div><div class="rpm-scale"><span>0</span><span>2</span><span>4</span><span>6</span><span id="redlineLabel">7.2k</span></div></div>
+        <div class="small-metrics"><div><span>车速 <small>km/h</small></span><strong id="speedValue">0</strong></div><div><span>扭矩 <small>N·m</small></span><strong id="torqueValue">0</strong></div><div><span>输出 <small>kW</small></span><strong id="powerValue">0</strong></div><div><span>增压 <small>bar</small></span><strong id="boostValue">0.00</strong></div></div>
+      </section>
+      <section class="controls">
+        <button id="ignitionButton" class="ignition"><span class="power-icon">⏻</span><span id="ignitionLabel">长按启动</span><kbd>I</kbd></button>
+        <div class="throttle-control"><label for="throttle">油门保持 <output id="throttleOutput">0%</output></label><input id="throttle" aria-label="油门保持" type="range" min="0" max="100" value="0"><small>拖动保持油门，或按住 W 临时加速</small></div>
+        <button id="brakePedal" class="pedal brake">刹车 <kbd>S</kbd></button><button id="gasPedal" class="pedal gas">油门 <kbd>W</kbd></button>
+        <div class="gear-controls"><button id="neutralButton" aria-label="挂入空挡" title="N 空挡 · 动力断开">N</button><button id="gearDown" aria-label="降挡">−</button><select id="gearSelect" aria-label="选择挡位"><option value="0">N 空挡</option></select><button id="gearUp" aria-label="升挡">+</button><button id="autoButton" class="active">自动挡</button></div>
+      </section>
+      <div class="drivetrain-note"><span id="gearRatio">动力断开</span><span>实验室挂挡同样加载 · 点击仪表挡位可直选</span></div><div class="keyboard-note"><span><kbd>W</kbd> 油门 <kbd>S</kbd> 刹车 <kbd>A</kbd><kbd>D</kbd> 转向 <kbd>Q</kbd><kbd>E</kbd> 换挡 <kbd>N</kbd> 空挡 <kbd>C</kbd> 离合</span><span id="statusNote">按住 I 或启动按钮点火。</span></div>
+      <div id="cockpitHost"></div><div id="dashboardHost"></div>
+    </section>
+    <aside class="right-rail">
+      <div class="tune-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h2>开放调校</h2></div><button id="resetTune" title="恢复原厂调校" class="text-button">恢复原厂 ↺</button></div>
+      <div class="tuning-fields">
+        <div class="tune-field"><label for="boost">涡轮增压 <output id="boostOutput"></output></label><input id="boost" type="range" min="0" max="2.2" step="0.1"><div class="range-caption"><span>自然吸气</span><span>2.2 bar</span></div></div>
+        <div class="tune-field"><label for="redline">红线转速 <output id="redlineOutput"></output></label><input id="redline" type="range" min="5000" max="10000" step="100"><div class="range-caption"><span>5,000</span><span>10,000 r/min</span></div></div>
+        <div class="tune-field"><label for="ignition">点火提前角修正 <output id="ignitionOutput"></output></label><input id="ignition" type="range" min="-8" max="15" step="1"><div class="range-caption"><span>保守</span><span>激进</span></div></div>
+        <div class="tune-field"><label for="mass">车辆质量 <output id="massOutput"></output></label><input id="mass" type="range" min="850" max="2400" step="10"><div class="range-caption"><span>850</span><span>2,400 kg</span></div></div>
+        <div class="tune-field"><label for="exhaust">排气声线 <output id="exhaustOutput"></output></label><input id="exhaust" type="range" min="0" max="1" step="0.01"><div class="range-caption"><span>低沉</span><span>通透</span></div></div>
+      </div>
+      <section class="audio-controls"><div class="audio-heading"><h2>声音</h2><span id="audioSourceBadge">IPA 原包音源</span></div><label for="soundProfile">发声方式</label><select id="soundProfile"><option value="package">IPA 原包颗粒</option><option value="recorded">昨晚录音颗粒 · 1.2 对照</option><option value="legacy">合成波形 · 对照</option></select><label for="listenerPosition">听音位置</label><select id="listenerPosition"><option value="outside">车外</option><option value="inside">车内</option></select><div class="tune-field"><label for="masterVolume">总音量 <output id="masterVolumeOutput">70%</output></label><input id="masterVolume" type="range" min="0" max="100" value="70"></div><div class="tune-field"><label for="popsVolume">收油爆音 <output id="popsVolumeOutput">70%</output></label><input id="popsVolume" type="range" min="0" max="100" value="70"></div><div class="tune-field"><label for="inductionVolume">增压声 <output id="inductionVolumeOutput">70%</output></label><input id="inductionVolume" type="range" min="0" max="100" value="70"></div><div class="tune-field"><label for="starterVolume">起动机 <output id="starterVolumeOutput">55%</output></label><input id="starterVolume" type="range" min="0" max="100" value="55"></div><p id="audioBankNote">V8、V10、I4、柴油四组原包录音，随转速衔接；起动机和爆音也已接入。</p><button id="phoneVolumeButton" class="text-button">应用当前手机备份音量 ↙</button><p id="phoneVolumeNote" class="audio-setting-note"></p><button id="creditsButton" class="text-button">录音来源与说明 ↗</button></section>
+      <section class="dyno-card"><div class="section-label">预测测功曲线 <span>DYNO</span></div><div class="chart-legend"><span><i class="orange"></i>功率 kW</span><span><i class="teal"></i>扭矩 N·m</span></div><canvas id="dynoChart" aria-label="预测发动机功率与扭矩曲线"></canvas><div class="dyno-foot"><span>800 r/min</span><span id="dynoMaxRpm"></span></div></section>
+      <div class="health-line"><div><span>冷却液</span><b id="tempValue">79°C</b></div><div><span>机械健康</span><b id="healthValue">100%</b></div></div><p class="risk-note" id="riskNote">调校状态正常</p>
+      <div class="save-buttons"><button id="saveButton">保存调校</button><button id="repairButton">维修 / 冷却</button></div>
+      <div class="storage-buttons"><button id="exportButton" class="text-button">导出 JSON ↗</button><button id="importButton" class="text-button">导入调校 ↙</button><input id="importFile" type="file" accept=".json,application/json" hidden></div>
+    </aside>
+  </main>
+  <footer class="page-footer"><span>ENGINE LAB <b>独立试玩版</b></span><span>简化模拟 · 参数为娱乐用途估算</span><span>在你的电脑上运行 <i>●</i></span></footer>
+</div>
+<dialog id="creditsDialog"><button id="closeCredits" class="dialog-close" aria-label="关闭声音说明">×</button><div class="eyebrow">IPA 1.0.7 / BUILD 14</div><h2>这次，声音来自原包。</h2><p>从你下载的 IPA 中读取了 443 段发动机录音、13 段爆音、5 段起动机录音及其音高标记，保留 PCM 样本后接入浏览器播放器。相邻转速的选取、加窗重排、混音和听音滤波为本版实现。</p><p><strong>V8：</strong>romanholtwick · Chevrolet Caprice · CC0。<br><strong>V10 / 高转速：</strong>Jonas_Jocys · Audi R8 Idling Reving Backfire · <a href="https://freesound.org/people/Jonas_Jocys/sounds/457733/" target="_blank" rel="noreferrer">Freesound 457733</a> · CC BY 4.0。<br><strong>I4 / 摩托：</strong>Chippy569 · The Dyno Sessions: 190E · CC0。<br><strong>柴油：</strong>DAVESTALKER · Diesel Start-Idle-Revs MZ000004 · CC0。</p><p><strong>起动机：</strong>lonemonk · 1951 Mercury-Turnover and Cold Start / Chev 350 start then die · CC BY 4.0；AlexanderChe / DAVESTALKER · CC0。<br><strong>爆音：</strong>klankbeeld · shotgun in field 130518_01.wav · CC BY 4.0；mchrpt / DledeSOUND / C-V · CC0。</p><p><a href="audio/package/CREDITS.md" target="_blank" rel="noreferrer">查看原包完整音源署名与修改说明 ↗</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p><p>已接入精确匹配的随包点火表和启动目标。扩展车型仍用示意时序，动力与损坏公式尚未取得；原作代码加密，本次没有解密或还原原 DSP。三维仍为程序化结构。</p><p>可切回「昨晚录音颗粒 · 1.2」比较变化；该模式保留 R8 与 klankbeeld 的旧版独立切片。起动机默认 0%，与已核读的原机声音设置一致，可自行调高试听。</p></dialog>
+<dialog id="sourceDialog"><button id="closeSource" class="dialog-close" aria-label="关闭来源参数">×</button><div class="eyebrow">FROM YOUR PHONE BACKUP</div><h2 id="sourceTitle">手机原始参数</h2><div id="sourceFacts" class="source-facts"></div><p>缸数、布局、怠速、红线、增压目标和传动数值已接入试玩。其余导出设置保留在下方；声音、动力和损坏算法仍为独立实现。</p><pre id="sourceJson"></pre></dialog>
+<div class="toast" id="toast" role="status"></div>
+<dialog id="gearDialog"><button id="closeGear" class="dialog-close" aria-label="关闭挡位选择">×</button><div class="eyebrow">TRANSMISSION</div><h2>选择挡位</h2><p>N 挡断开车轮动力，可自由试音；挂挡后，转速、车速和声音随传动共同变化。直接选挡会切到手动模式。</p><div id="gearChoiceList" class="gear-choice-list"></div></dialog>
+<dialog id="helpDialog"><button id="closeHelp" class="dialog-close" aria-label="关闭操作说明">×</button><div class="eyebrow">WELCOME TO YOUR GARAGE</div><h2>把引擎，握在手里。</h2><p>按住「长按启动」或 I，等进度完成后松开；提前松手会取消。随后拖动油门或按住 W。右上角可开关声音。</p><div class="help-grid"><div><strong>引擎实验室</strong><p>N 挡可自由轰油；按 E / + 挂入1挡，挂挡后显示实际模拟车速。Q / − 降挡，1挡以下为N，C分离离合。点仪表挡位可直选全部挡位。拖动模型旋转，滚轮缩放；慢动作只影响三维展示。</p></div><div><strong>试车场</strong><p>W 加速、S 刹车、A / D 转向，Q / E 手动换挡，C 离合。点击「400 米起跑」重新发车，倒计时后按住油门。</p></div><div><strong>自由调校</strong><p>增压、红线、点火与车重会影响动力和加速。保存后下次打开自动恢复，也可以导出 JSON。</p></div><div><strong>关于这个版本</strong><p>1.5 接入最新原机配置，新增完整驾驶仪表、补给、速度诊断和可编辑车辆页面。IPA 1.0.7 音源、精确匹配点火表与手机 JSON 保留。原生代码仍加密，播放和动力过程为本版实现。</p></div></div><button id="helpDone" class="help-done">开始玩 ↗</button></dialog>
+<script type="module" src="app.js"></script>
+</body></html>

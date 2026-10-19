@@ -1,0 +1,1 @@
+{"name":"engine-lab-local","version":"1.5.0","private":true,"type":"module","scripts":{"start":"node server.cjs","test":"node --test"}}
